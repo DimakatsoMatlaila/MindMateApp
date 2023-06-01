@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
+    android:background="@drawable/logo2"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/usignup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:text="Welcome"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/CEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usignup"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background"
+            android:color="@color/black"
+            android:drawableLeft="@android:drawable/ic_dialog_email"
+            android:drawablePadding="20dp"
+            android:hint="Email"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <EditText
+            android:id="@+id/Cuname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/CEmail"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background"
+            android:color="@color/black"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:drawablePadding="20dp"
+            android:hint="Username"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/desc"
+            android:layout_below="@id/crtpasswordC"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="Specializes in:" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/background"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/desc">
+
+
+            <RadioButton
+                android:id="@+id/prob2"
+                android:layout_width="wrap_content"
+                android:background="#1111"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:text="Alcohol / Other Drugs/ Anger Management" />
+
+
+            <RadioButton
+                android:id="@+id/prob4"
+                android:layout_width="wrap_content"
+                android:background="#1111"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:text="Anxiety / Stress/ Depression" />
+
+
+            <RadioButton
+                android:id="@+id/prob6"
+                android:layout_width="wrap_content"
+                android:background="#1111"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:text="Self-Esteem" />
+
+            <RadioButton
+                android:id="@+id/prob7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#1111"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="Grief and Loss" />
+
+        </RadioGroup>
+
+
+        <EditText
+            android:id="@+id/LogCPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Cuname"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background"
+            android:color="@color/white"
+            android:drawableLeft="@android:drawable/ic_lock_idle_lock"
+            android:drawablePadding="20dp"
+            android:hint="Password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:password="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <EditText
+            android:id="@+id/crtpasswordC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LogCPassword"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background"
+            android:color="@color/white"
+            android:drawableLeft="@android:drawable/ic_lock_idle_lock"
+            android:drawablePadding="20dp"
+            android:hint="Confirm Password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:password="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signupbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radioGroup"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/white"
+            android:padding="5dp"
+            android:text="create account"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+</ScrollView>
