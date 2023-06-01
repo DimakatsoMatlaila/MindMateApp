@@ -3,6 +3,7 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -17,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,6 +32,7 @@ import okhttp3.Response;
 public class counsellorChat extends AppCompatActivity {
     LinearLayout embed;
             TextView tv;
+    ArrayList<String> arrNames=new ArrayList<String>();
     String searchUsername;
     String[] usernames,used;
 
@@ -103,6 +106,8 @@ public class counsellorChat extends AppCompatActivity {
                             searchUsername = responseStr;
                             ret.setText(searchUsername);
                             head.setText(searchUsername);
+                            GlobalVariables.getInstance().setCounsellorname(searchUsername);
+                            System.out.println("The counsellor is: "+GlobalVariables.getInstance().getCounsellorname());
                             ret.setTextSize(40);
                             ret.setTypeface(null, Typeface.BOLD);
                             ret.setGravity(Gravity.CENTER);
@@ -126,10 +131,12 @@ public class counsellorChat extends AppCompatActivity {
                                     if (response.isSuccessful()) {
                                         UsernamesJson = response.toString();
                                         final String responseStr = response.body().string();
+
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
                                                 processJSON(responseStr);
+                                               // GlobalVariables.getInstance().setCounsellorname(responseStr);
                                                 used = createArr(responseStr);
                                                 Toast.makeText(counsellorChat.this,"Welcome "+searchUsername + "!",Toast.LENGTH_SHORT).show();
 
@@ -178,6 +185,7 @@ public class counsellorChat extends AppCompatActivity {
         //uname = new TextView(this);
         //uname.setText(username);
     }
+
     public String[] createArr(String str) {
         try {
             // Parse the JSON string into a JSONArray
@@ -198,6 +206,7 @@ public class counsellorChat extends AppCompatActivity {
         }
         return usernames;
     }
+
     public void processJSON(String json){
         try {
             JSONArray all = new JSONArray(json);
@@ -206,22 +215,36 @@ public class counsellorChat extends AppCompatActivity {
             // Populate the string array with values from the JSONArray
             for (int i = 0; i < all.length(); i++) {
                 usernames[i] = all.getString(i);
+                arrNames.add(usernames[i]);
                 tv = new TextView(this);
                 tv.setText(all.getString(i));
                 tv.setTextColor(getResources().getColor(R.color.white));
                 tv.setTextSize(30);
                 tv.setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
                 embed.addView(tv);
+                //GlobalVariables.getInstance().setUsername(usernames[i]);
+                int j =i;
+
+                int finalI = i;
+                int finalJ = j;
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        setContentView(R.layout.activity_userchatwindow);
+                        openChat(finalJ);
+                        // setContentView(R.layout.activity_userchatwindow);
                     }
                 });
+                j++;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    public void openChat(int i){
+        GlobalVariables.getInstance().setUsername(arrNames.get(i));
+        System.out.println("Username is "+GlobalVariables.getInstance().getUsername());
+        Intent intent = new Intent(this,userchatwindow.class);
+        startActivity(intent);
     }
 }

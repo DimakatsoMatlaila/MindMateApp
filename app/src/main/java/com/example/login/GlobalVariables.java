@@ -1,9 +1,43 @@
 package com.example.login;
 
+import android.widget.RadioButton;
+
 public class GlobalVariables {
     private static GlobalVariables instance;
+    private boolean vld;
+
+    public boolean isVld() {
+        return vld;
+    }
+public boolean getVld(){
+        return vld;
+}
+    public void setVld(boolean vld) {
+        this.vld = vld;
+    }
 
     private String globalVariable1;
+    private String counsellorname;
+
+    public String getCounsellorname() {
+        return counsellorname;
+    }
+
+    public void setCounsellorname(String counsellorname) {
+        this.counsellorname = counsellorname;
+    }
+
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
     private int globalVariable2;
     // Add more global variables as needed
 
@@ -16,6 +50,17 @@ public class GlobalVariables {
             instance = new GlobalVariables();
         }
         return instance;
+    }
+
+    public boolean isCounsillor(RadioButton radU,RadioButton radC){
+        boolean r = true;
+        if(radU.isChecked()){
+            r=false;
+        } else if (radC.isChecked()) {
+            r=true;
+
+        }
+        return r;
     }
 
     public String getGlobalVariable1() {

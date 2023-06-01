@@ -2,6 +2,7 @@ package com.example.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -100,6 +101,8 @@ public class userChat extends AppCompatActivity {
                             searchUsername = responseStr;
                             ret.setText(searchUsername);
                             head.setText(searchUsername);
+                            GlobalVariables.getInstance().setUsername(searchUsername);
+                            System.out.println("The user name is : " + GlobalVariables.getInstance().getUsername());
                             ret.setTextSize(40);
                             ret.setTypeface(null, Typeface.BOLD);
                             ret.setGravity(Gravity.CENTER);
@@ -203,6 +206,8 @@ public class userChat extends AppCompatActivity {
             // Populate the string array with values from the JSONArray
             for (int i = 0; i < all.length(); i++) {
                 usernames[i] = all.getString(i);
+                GlobalVariables.getInstance().setCounsellorname(usernames[i]);
+                System.out.println("The counsellor name is : " + GlobalVariables.getInstance().getCounsellorname());
                 tv = new TextView(this);
                 if(all.getString(i).toLowerCase().equals("null")){
                     continue;
@@ -223,5 +228,12 @@ public class userChat extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void openChat(String uname){
+        //GlobalVariables.getInstance().setUsername(uname);
+       // System.out.println("Username is "+GlobalVariables.getInstance().getUsername());
+        Intent intent = new Intent(this,userchatwindow.class);
+        startActivity(intent);
     }
 }

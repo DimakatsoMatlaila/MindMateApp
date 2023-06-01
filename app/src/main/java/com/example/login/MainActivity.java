@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (radUser.isChecked()) {
                     if (passed1.equals("true")) {
+                       boolean R= GlobalVariables.getInstance().isCounsillor(radUser,radCounsellor);
+                       GlobalVariables.getInstance().setVld(R);
                         globalVars.setGlobalVariable1(EMAIL);
                         startUserChat();
                     } else if(passed1.equals("false")) {
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else if (radCounsellor.isChecked()) {
                     if (passed1.equals("true")) {
+                        boolean R= GlobalVariables.getInstance().isCounsillor(radUser,radCounsellor);
+                        GlobalVariables.getInstance().setVld(R);
                         globalVars.setGlobalVariable1(EMAIL);
                         //startUserSignupChat();
                         startCounsChat();
@@ -131,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 radCounsellor = findViewById(R.id.counrad);
                 if(radCounsellor.isChecked()) {
                     startCounsSignupActivity();
+
                 }
                 else if (radUser.isChecked()){
                     //openUserPage();
