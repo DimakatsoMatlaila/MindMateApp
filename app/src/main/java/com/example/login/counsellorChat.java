@@ -155,35 +155,8 @@ public class counsellorChat extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
-
         setContentView(embed);
-         //embed.addView(ret);
-        //var.addView(embed);
 
-        //embed.addView(tv);
-
-
-
-        /*setContentView(embed);
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setContentView(R.layout.activity_userchatwindow);
-            }
-        });
-
-         */
-
-        // TextView uname= (TextView) findViewById(R.id.reftext);
-        //uname = new TextView(this);
-        //uname.setText(username);
     }
 
     public String[] createArr(String str) {

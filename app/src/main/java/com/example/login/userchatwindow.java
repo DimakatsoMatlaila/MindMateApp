@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.login.databinding.ActivityMainBinding;
+
 import java.util.ArrayList;
 
 
@@ -22,12 +24,15 @@ public class userchatwindow extends AppCompatActivity {
         String sname = GlobalVariables.getInstance().getUsername();
         String rname = GlobalVariables.getInstance().getCounsellorname();
         String logger = "";
+        String rec="";
         boolean r = GlobalVariables.getInstance().getVld();
+        GlobalVariables.getInstance().setVld(r);
         if(r==true){
             logger =  GlobalVariables.getInstance().getCounsellorname();
+            rec =GlobalVariables.getInstance().getUsername();
         } else if (r==false) {
             logger=GlobalVariables.getInstance().getUsername();
-
+            rec=GlobalVariables.getInstance().getCounsellorname();
         }
 
         messages = new ArrayList<>();
@@ -38,6 +43,8 @@ public class userchatwindow extends AppCompatActivity {
 
         Button sendButton = findViewById(R.id.sendButton);
         String finalLogger = logger;
+        String finalLogger1 = logger;
+        String finalRec = rec;
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,7 +52,9 @@ public class userchatwindow extends AppCompatActivity {
                 String message = messageEditText.getText().toString().trim();
                 if (!message.isEmpty()) {
                     sendMessage(finalLogger, message);
-                    ChatClient.sendMessage(sname,rname,message);
+
+                    ChatClient.sendMessage(finalLogger1, finalRec,message);
+                    //ChatClient.receiveMessages(finalRec,finalLogger1);
                     messageEditText.setText("");
 
                 }

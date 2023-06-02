@@ -23,6 +23,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null) {
+
             view = LayoutInflater.from(getContext()).inflate(R.layout.item_message, parent, false);
         }
 
@@ -30,6 +31,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         TextView senderTextView = view.findViewById(R.id.senderTextView);
         TextView messageTextView = view.findViewById(R.id.messageTextView);
+
+
 
         senderTextView.setText(message.getSender());
         messageTextView.setText(message.getMessage());
