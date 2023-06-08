@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.login.databinding.ActivityReceiveMessagesBinding;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,11 +31,17 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class counsellorChat extends AppCompatActivity {
     LinearLayout embed;
-            TextView tv;
+
+    TextView tv;
     ArrayList<String> arrNames=new ArrayList<String>();
     String searchUsername;
+    receiverClass receiverclassInst;
+    ReceiveMessages receiveMessagesInst;
     String[] usernames,used;
 
     OkHttpClient client = new OkHttpClient();
@@ -114,7 +122,7 @@ public class counsellorChat extends AppCompatActivity {
                             //ret.setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
                             ret.setTextColor(getResources().getColor(R.color.counName));
 
-                            //embed.addView(ret);
+                     //embed.addView(ret);
 
                             // Now that we have the searchUsername, we can make the second POST request
                             HttpUrl.Builder urlB2 = HttpUrl.parse("https://lamp.ms.wits.ac.za/home/s2556165/getUsers2.php").newBuilder();
@@ -186,38 +194,83 @@ public class counsellorChat extends AppCompatActivity {
             String[] usernames = new String[all.length()];
 
             // Populate the string array with values from the JSONArray
-            for (int i = 0; i < all.length(); i++) {
-                usernames[i] = all.getString(i);
-                arrNames.add(usernames[i]);
-                tv = new TextView(this);
-                tv.setText(all.getString(i));
-                tv.setTextColor(getResources().getColor(R.color.white));
-                tv.setTextSize(30);
-                tv.setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
-                embed.addView(tv);
-                //GlobalVariables.getInstance().setUsername(usernames[i]);
-                int j =i;
+            if (all.length() == 0) {
+                TextView nullCase = new TextView(this);
+                nullCase.setText("There are no users at the moment. \n Keep checking in to see if a user has been assigned to you!");
+                nullCase.setTextColor(getResources().getColor(R.color.backBlue));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
 
-                int finalI = i;
-                int finalJ = j;
-                tv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openChat(finalJ);
-                        // setContentView(R.layout.activity_userchatwindow);
+                layoutParams.gravity = Gravity.CENTER_VERTICAL;
+
+                nullCase.setLayoutParams(layoutParams);
+
+                embed.addView(nullCase);
+            } else {
+                for (int i = 0; i < all.length(); i++) {
+                    receiveMessagesInst = new ReceiveMessages();
+                    if (all.getString(i).toLowerCase().equals("null")) {
+                        TextView nullCase = new TextView(this);
+                        nullCase.setText("There are no users at the moment. \n Keep checking to see if a user has been assigned to you!");
+                        nullCase.setTextColor(getResources().getColor(R.color.backBlue));
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+
+                        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+
+                        nullCase.setLayoutParams(layoutParams);
+
+                        embed.addView(nullCase);
+                        continue;
                     }
-                });
-                j++;
-            }
 
+                    usernames[i] = all.getString(i);
+                    arrNames.add(usernames[i]);
+                    String user = all.getString(i);
+                    receiveMessagesInst.counsellor = searchUsername;
+                   // receiveMessagesInst.user = user;
+                    System.out.println(user);
+                    int j =i;
+
+                    int finalI = i;
+                    int finalJ = j;
+                    tv = new TextView(this);
+                    tv.setText(all.getString(i));
+                    tv.setTextColor(getResources().getColor(R.color.white));
+                    tv.setTextSize(30);
+                    tv.setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
+                    embed.addView(tv);
+
+                    int finalI1 = i;
+                    tv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setUsername(finalI1);
+                            openChat(finalJ);
+                            // setContentView(R.layout.activity_userchatwindow);
+                        }
+                    });
+                    j++;
+                }
+
+            }
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
     public void openChat(int i){
         GlobalVariables.getInstance().setUsername(arrNames.get(i));
-        System.out.println("Username is "+GlobalVariables.getInstance().getUsername());
-        Intent intent = new Intent(this,userchatwindow.class);
+        Intent intent = new Intent(this, ReceiveMessages.class);
         startActivity(intent);
     }
+    public void setUsername(int i){
+        receiveMessagesInst.user=arrNames.get(i);
+    }
+
+
+
 }

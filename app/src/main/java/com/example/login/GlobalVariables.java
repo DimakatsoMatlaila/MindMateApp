@@ -5,6 +5,15 @@ import android.widget.RadioButton;
 public class GlobalVariables {
     private static GlobalVariables instance;
     private boolean vld;
+    private int MessageArrSize;
+
+    public int getMessageArrSize() {
+        return MessageArrSize;
+    }
+
+    public void setMessageArrSize(int messageArrSize) {
+        MessageArrSize = messageArrSize;
+    }
 
     public boolean isVld() {
         return vld;

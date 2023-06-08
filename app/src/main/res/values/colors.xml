@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#D7E9F6</color>
     <color name="blue">#20FFFFFF</color>
-    <color name="backBlue">#2196F3</color>
+    <color name="backBlue">#87BDE8</color>
+    <color name="nameColorrR">#46217C</color>
+    <color name="nameColorrS">#E109BD</color>
     <color name="counName">#1C2E46</color>
 </resources>

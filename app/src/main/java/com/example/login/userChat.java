@@ -15,6 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,6 +32,9 @@ public class userChat extends AppCompatActivity {
     LinearLayout embed;
     TextView tv;
     String searchUsername;
+
+    ArrayList<String> arrNames=new ArrayList<String>();
+    ReceiveMessages receiveMessagesInst;
     String[] usernames,used;
 
     OkHttpClient client = new OkHttpClient();
@@ -205,22 +211,39 @@ public class userChat extends AppCompatActivity {
 
             // Populate the string array with values from the JSONArray
             for (int i = 0; i < all.length(); i++) {
+                receiveMessagesInst = new ReceiveMessages();
                 usernames[i] = all.getString(i);
+                arrNames.add(usernames[i]);
+                int j =i;
+                int finalI = i;
+                int finalJ = j;
+                String counsellor = all.getString(i);
                 GlobalVariables.getInstance().setCounsellorname(usernames[i]);
+                receiveMessagesInst.counsellor = counsellor;
+                receiveMessagesInst.user = searchUsername;
                 System.out.println("The counsellor name is : " + GlobalVariables.getInstance().getCounsellorname());
                 tv = new TextView(this);
-                if(all.getString(i).toLowerCase().equals("null")){
-                    continue;
-                }
                 tv.setText(all.getString(i));
                 tv.setTextColor(getResources().getColor(R.color.white));
+                String con = new String(all.getString(0).trim().getBytes(), Charset.defaultCharset());
+                System.out.println(con);
+                TextView nullCase = new TextView(this);
+                if(con.equals("null")){
+                    nullCase.setText("There are no counsellors at the moment. \n Keep checking in to see if a counsellor has been assigned to you!");
+                    nullCase.setTextColor(getResources().getColor(R.color.backBlue));
+                    embed.addView(nullCase);
+                    continue;
+                }
+
+
+
                 tv.setTextSize(30);
                 tv.setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
                 embed.addView(tv);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        setContentView(R.layout.activity_userchatwindow);
+                        openChat(finalJ);
                     }
                 });
             }
@@ -230,10 +253,9 @@ public class userChat extends AppCompatActivity {
         }
     }
 
-    public void openChat(String uname){
-        //GlobalVariables.getInstance().setUsername(uname);
-       // System.out.println("Username is "+GlobalVariables.getInstance().getUsername());
-        Intent intent = new Intent(this,userchatwindow.class);
+    public void openChat(int i){
+        GlobalVariables.getInstance().setCounsellorname(arrNames.get(i));
+        Intent intent = new Intent(this, ReceiveMessages.class);
         startActivity(intent);
     }
 }
