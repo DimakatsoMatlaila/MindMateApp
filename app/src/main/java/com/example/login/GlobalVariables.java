@@ -3,6 +3,7 @@ package com.example.login;
 import android.widget.RadioButton;
 
 public class GlobalVariables {
+
     private static GlobalVariables instance;
     private boolean vld;
     private int MessageArrSize;
