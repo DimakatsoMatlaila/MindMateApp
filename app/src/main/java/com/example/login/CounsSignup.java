@@ -94,7 +94,7 @@ public class CounsSignup extends AppCompatActivity {
                 int c=0;
                 int p =validateinput(c);
                 if(p==0) {
-                    String url = "https://lamp.ms.wits.ac.za/home/s2555500/createcoun.php";
+                    String url = "https://lamp.ms.wits.ac.za/home/s2555500/csignup.php";
                     Log.d(TAG, "URL: " + url); // Debug: Log the URL to verify it's correct
 
                     // Create the request body with the form parameters

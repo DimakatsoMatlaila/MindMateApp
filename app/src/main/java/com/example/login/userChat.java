@@ -2,19 +2,33 @@ package com.example.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.login.databinding.ActivityListUsersBinding;
+import com.example.login.databinding.ActivityReceiveMessagesBinding;
+import com.example.login.databinding.ActivityRemoveAccountBinding;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,10 +39,28 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class userChat extends AppCompatActivity {
     LinearLayout embed;
+    ActivityListUsersBinding binding;
+
+    ActivityRemoveAccountBinding binding2;
+
+    removeAccount removeAccountInst;
+
+    TextView textView;
+    ImageView imageView;
+
+
     TextView tv;
+    ArrayList<String> arrNames=new ArrayList<String>();
     String searchUsername;
+    receiverClass receiverclassInst;
+    ReceiveMessages receiveMessagesInst;
+
+    SharedPreferences sharedPreferences;
     String[] usernames,used;
 
     OkHttpClient client = new OkHttpClient();
@@ -56,20 +88,61 @@ public class userChat extends AppCompatActivity {
     private TextView uname;
     ChatClient chatClient = new ChatClient();
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityListUsersBinding.inflate(getLayoutInflater());
+        binding2 = ActivityRemoveAccountBinding.inflate(getLayoutInflater());
+        textView = findViewById(R.id.dAcc);
+        //imageView = findViewById(R.id.options);
         embed = new LinearLayout(this);
-        String logEmail = GlobalVariables.getInstance().getGlobalVariable1();
+        sharedPreferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+        String logEmail = sharedPreferences.getString("email", "");
         embed.setOrientation(LinearLayout.VERTICAL);
         TextView head = new TextView(this);
         head.setBackgroundColor(getResources().getColor(R.color.backBlue));
-        head.setTextSize(35);
+        head.setTextSize(20);
         head.setPadding(16, 16, 16, 16);
         head.setTypeface(null, Typeface.BOLD);
         head.setText("Chats");
         head.setGravity(Gravity.CENTER);
         embed.addView(head);
+        /*
+        binding.options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopup(binding.options);
+            }
+        });
+        */
+        binding.options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(userChat.this,"Logging out", Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("email");
+                editor.remove("UserType");
+                editor.apply();
+                startMain();
+            }
+        });
+        binding.deleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startRemove();
+            }
+        });
+
+
+        binding2.dAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startMain();
+                removeAccountInst.delete();
+            }
+        });
 
         head.setTextColor(getResources().getColor(R.color.purple_200));
 
@@ -99,10 +172,10 @@ public class userChat extends AppCompatActivity {
                         @Override
                         public void run() {
                             searchUsername = responseStr;
+                            GlobalVariables.getInstance().setLoggedUser(searchUsername);
                             ret.setText(searchUsername);
                             head.setText(searchUsername);
                             GlobalVariables.getInstance().setUsername(searchUsername);
-                            System.out.println("The user name is : " + GlobalVariables.getInstance().getUsername());
                             ret.setTextSize(40);
                             ret.setTypeface(null, Typeface.BOLD);
                             ret.setGravity(Gravity.CENTER);
@@ -126,10 +199,12 @@ public class userChat extends AppCompatActivity {
                                     if (response.isSuccessful()) {
                                         UsernamesJson = response.toString();
                                         final String responseStr = response.body().string();
+
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
                                                 processJSON(responseStr);
+                                                // GlobalVariables.getInstance().setCounsellorname(responseStr);
                                                 used = createArr(responseStr);
                                                 Toast.makeText(userChat.this,"Welcome "+searchUsername + "!",Toast.LENGTH_SHORT).show();
 
@@ -148,36 +223,10 @@ public class userChat extends AppCompatActivity {
             }
         });
 
+        setContentView(binding.getRoot());
 
-
-
-
-
-
-
-
-        setContentView(embed);
-        //embed.addView(ret);
-        //var.addView(embed);
-
-        //embed.addView(tv);
-
-
-
-        /*setContentView(embed);
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setContentView(R.layout.activity_userchatwindow);
-            }
-        });
-
-         */
-
-        // TextView uname= (TextView) findViewById(R.id.reftext);
-        //uname = new TextView(this);
-        //uname.setText(username);
     }
+
     public String[] createArr(String str) {
         try {
             // Parse the JSON string into a JSONArray
@@ -198,42 +247,141 @@ public class userChat extends AppCompatActivity {
         }
         return usernames;
     }
+
     public void processJSON(String json){
         try {
             JSONArray all = new JSONArray(json);
             String[] usernames = new String[all.length()];
 
             // Populate the string array with values from the JSONArray
-            for (int i = 0; i < all.length(); i++) {
-                usernames[i] = all.getString(i);
-                GlobalVariables.getInstance().setCounsellorname(usernames[i]);
-                System.out.println("The counsellor name is : " + GlobalVariables.getInstance().getCounsellorname());
-                tv = new TextView(this);
-                if(all.getString(i).toLowerCase().equals("null")){
-                    continue;
-                }
-                tv.setText(all.getString(i));
-                tv.setTextColor(getResources().getColor(R.color.white));
-                tv.setTextSize(30);
-                tv.setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
-                embed.addView(tv);
-                tv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        setContentView(R.layout.activity_userchatwindow);
-                    }
-                });
-            }
+            if (all.length() == 0) {
+                TextView nullCase = new TextView(this);
+                nullCase.setText("There are no counsellors at the moment. \n Keep checking in to see if a counsellor has been assigned to you!");
+                nullCase.setTextColor(getResources().getColor(R.color.backBlue));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
 
+                );
+
+                layoutParams.gravity = Gravity.CENTER_VERTICAL;
+
+                nullCase.setLayoutParams(layoutParams);
+                binding.listLL.addView(nullCase);
+            } else {
+                for (int i = 0; i < all.length(); i++) {
+                    receiveMessagesInst = new ReceiveMessages();
+                    if (all.getString(i).toLowerCase().equals("null")) {
+                        TextView nullCase = new TextView(this);
+                        nullCase.setText("There are no counsellors at the moment. \n Keep checking to see if a counsellor has been assigned to you!");
+                        nullCase.setTextColor(getResources().getColor(R.color.backBlue));
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+
+                        nullCase.setLayoutParams(layoutParams);
+
+                        binding.listLL.addView(nullCase);
+                        continue;
+                    }
+
+                    usernames[i] = all.getString(i);
+                    arrNames.add(usernames[i]);
+                    String user = all.getString(i);
+                    receiveMessagesInst.user = searchUsername;
+                    receiveMessagesInst.counsellor = all.getString(i);
+                    int j =i;
+
+                    int finalI = i;
+                    int finalJ = j;
+                    tv = new TextView(this);
+                    tv.setText(all.getString(i));
+                    tv.setTextColor(getResources().getColor(R.color.white));
+                    tv.setTextSize(30);
+                    tv.setBackgroundDrawable(getResources().getDrawable(R.color.purple_200));
+                    binding.listLL.addView(tv);
+
+                    int finalI1 = i;
+                    tv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            openChat(finalJ);
+                            // setContentView(R.layout.activity_userchatwindow);
+                        }
+                    });
+                    j++;
+                }
+
+            }
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
-
-    public void openChat(String uname){
-        //GlobalVariables.getInstance().setUsername(uname);
-       // System.out.println("Username is "+GlobalVariables.getInstance().getUsername());
-        Intent intent = new Intent(this,userchatwindow.class);
+    public void openChat(int i){
+        GlobalVariables.getInstance().setCounsellorname(arrNames.get(i));
+        Intent intent = new Intent(this, ReceiveMessages.class);
+        PageStack.push(thisIntent());
         startActivity(intent);
     }
+
+    public Intent thisIntent(){
+        Intent intent = new Intent(this, counsellorChat.class);
+        startActivity(intent);
+        return intent;
+    }
+
+    public void startRemove(){
+        Intent intent = new Intent(this, removeAccount.class);
+        startActivity(intent);
+    }
+
+
+
+
+    /*
+    private void showPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.activity_remove_account, null);
+
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(popupView);
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        // Set the dialog's position
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.gravity = Gravity.TOP | Gravity.START;
+        params.x = location[0] + view.getWidth() / 2;
+        params.y = location[1] + view.getHeight();
+
+        dialog.getWindow().setAttributes(params);
+
+
+        dialog.setTitle("Popup Dialog");
+        dialog.setCancelable(true);
+
+        dialog.show();
+    }
+
+     */
+
+    public void startMain(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void deleteAccount(View view){
+        removeAccountInst = new removeAccount();
+        removeAccountInst.delete();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+       System.exit(0);
+    }
+
+
 }

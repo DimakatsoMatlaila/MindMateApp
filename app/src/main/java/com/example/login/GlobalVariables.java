@@ -5,6 +5,15 @@ import android.widget.RadioButton;
 public class GlobalVariables {
     private static GlobalVariables instance;
     private boolean vld;
+    private int MessageArrSize;
+
+    public int getMessageArrSize() {
+        return MessageArrSize;
+    }
+
+    public void setMessageArrSize(int messageArrSize) {
+        MessageArrSize = messageArrSize;
+    }
 
     public boolean isVld() {
         return vld;
@@ -18,6 +27,16 @@ public boolean getVld(){
 
     private String globalVariable1;
     private String counsellorname;
+
+    public String getLoggedUser() {
+        return LoggedUser;
+    }
+
+    public void setLoggedUser(String loggedUser) {
+        LoggedUser = loggedUser;
+    }
+
+    private String LoggedUser;
 
     public String getCounsellorname() {
         return counsellorname;

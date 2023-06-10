@@ -3,7 +3,10 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,8 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Login";
 
     private EditText txtPassword;
+
+    String userType;
     private RadioButton radUser;
     private RadioButton radCounsellor;
+
+    EditText email;
+
+    private SharedPreferences sharedPreferences;
+
     private RequestCallback requestCallback;
     GlobalVariables globalVars = GlobalVariables.getInstance();
     String EMAIL= "";
@@ -43,11 +53,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        sharedPreferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+        String storedEmail = sharedPreferences.getString("email", "");
+        String storedUserType = sharedPreferences.getString("userType", "");
+
+        if (!storedEmail.isEmpty() && !storedUserType.isEmpty()) {
+            navigateToMainActivity();
+            return;
+        }
+
+
+
+
+
+
+
+
+        setContentView(R.layout.activity_main);
         txtPassword = findViewById(R.id.LogPassword);
         radUser = findViewById(R.id.userrad);
         radCounsellor = findViewById(R.id.counrad);
+        email = findViewById(R.id.FPusername);
+        userType = "";
         MaterialButton loginBtn = findViewById(R.id.loginbtn);
         TextView forgotPassTextView = findViewById(R.id.forgotpass);
         TextView createAccountText = findViewById(R.id.createAccountText);
@@ -55,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         requestCallback = new RequestCallback() {
             @Override
             public void onRequestComplete(String[] passReturned) {
+                PageStack.push(thisIntent());
+                sharedPreferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
                 String passed1 = new String(passReturned[1].toString().trim().getBytes(), Charset.defaultCharset());
                 Log.d(TAG, "The password from server BB: " + passReturned[1]);
 
@@ -65,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                        GlobalVariables.getInstance().setVld(R);
                         globalVars.setGlobalVariable1(EMAIL);
                         startUserChat();
+                        userType = "User";
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", email.getText().toString().trim());
+                        editor.putString("userType", userType);
+                        editor.apply();
                     } else if(passed1.equals("false")) {
                         Toast.makeText(MainActivity.this, "Incorrect password!", Toast.LENGTH_SHORT).show();
                     }
@@ -78,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
                         globalVars.setGlobalVariable1(EMAIL);
                         //startUserSignupChat();
                         startCounsChat();
+                        userType = "Counsellor";
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", email.getText().toString().trim());
+                        editor.putString("userType", userType);
+                        editor.apply();
                     } else if(passed1.equals("false")) {
                         Toast.makeText(MainActivity.this, "Incorrect password!", Toast.LENGTH_SHORT).show();
                     }
@@ -104,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     if (radUser.isChecked()) {
                         String url = "https://lamp.ms.wits.ac.za/home/s2555500/ulogin.php?email=" + email + "&&password=" + Fpass;
                         Reques(url, requestCallback);
+
                     } else if (radCounsellor.isChecked()) {
                         String url = "https://lamp.ms.wits.ac.za/home/s2555500/counlogin.php?email=" + email + "&&password=" + Fpass;
                         Reques(url, requestCallback);
@@ -135,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
                 radCounsellor = findViewById(R.id.counrad);
                 if(radCounsellor.isChecked()) {
                     startCounsSignupActivity();
-
                 }
                 else if (radUser.isChecked()){
                     //openUserPage();
@@ -161,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
     private void openForgotPasswordPage() {
         Intent intent=new Intent(this,ForgotPasswordActivity.class);
         Toast.makeText(MainActivity.this, "Forgot password clicked", Toast.LENGTH_SHORT).show();
+        PageStack.push(thisIntent());
         startActivity(intent);
         // Implement the logic to open the Forgot Password page
         // You can start a new activity or perform any desired action
@@ -181,19 +222,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void startCounsSignupActivity() {
         Intent intent = new Intent(this, CounsSignup.class);
+        PageStack.push(thisIntent());
         startActivity(intent);
+
     }
     private void startUserSignupActivity(){
         Intent intent = new Intent(this,userSignUpActivity.class);
+        PageStack.push(thisIntent());
         startActivity(intent);
+
     }
     private void startUserChat() {
         Intent intent = new Intent(this, userChat.class);
+        //PageStack.push(thisIntent());
         startActivity(intent);
+
     }
     private void startCounsChat() {
         Intent intent = new Intent(this, counsellorChat.class);
+        //PageStack.push(thisIntent());
         startActivity(intent);
+
+    }
+    public Intent thisIntent(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        return intent;
+    }
+
+    public void navigateToMainActivity(){
+        if(sharedPreferences.getString("userType", "").equals("User")){
+            startUserChat();
+        }else{
+            startCounsChat();
+        }
     }
     public final void Reques(String url, RequestCallback callback) {
         Log.d(TAG, "URL: " + url); // Debug: Log the URL to verify it's correct
@@ -223,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
                             String[] splitArray = { "status", status };
                             callback.onRequestComplete(splitArray);
-                            Log.d(TAG, "The Password from the server is: " + splitArray[1]);
+                            Log.d(TAG, "The PassstartCounsCword from the server is: " + splitArray[1]);
                             Log.d(TAG, "The Class received from the server is: " + splitArray[1].getClass().getName());
                         }
                     });

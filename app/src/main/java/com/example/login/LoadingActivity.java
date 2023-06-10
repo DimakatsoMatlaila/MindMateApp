@@ -21,6 +21,7 @@ public class LoadingActivity extends AppCompatActivity {
                 openMainActivity();
             }
         }, LOADING_DELAY);
+
     }
     private void openMainActivity() {
         Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
