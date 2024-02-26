@@ -91,5 +91,5 @@
         android:padding="10dp"
         android:text="Reset Password"
         android:textColor="@color/white" />
-
+<!--Finally here you go smart human Flag 8/8: "msl}" -->
 </RelativeLayout>
