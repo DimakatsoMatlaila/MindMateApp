@@ -123,6 +123,7 @@ public class ReceiveMessages extends AppCompatActivity {
     }
 
     public void openChat(){
+        //Brilliant ! Here is Flag 7/8 : "004005_"
         Intent intent = new Intent(this,userchatwindow.class);
         PageStack.push(thisIntent());
         startActivity(intent);
