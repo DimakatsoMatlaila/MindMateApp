@@ -40,3 +40,4 @@ public class HashSalt {
         }
     }
 }
+//You never give,Don't you? Here is flag 6/8 : "Kud0s!_"
