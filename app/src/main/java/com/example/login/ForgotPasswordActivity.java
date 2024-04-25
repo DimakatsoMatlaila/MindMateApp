@@ -88,10 +88,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         String Fpass = HashSalt.hashString(pass1);
                         if (radUser.isChecked()) {
                             Toast.makeText(ForgotPasswordActivity.this, "Rad user selected!", Toast.LENGTH_SHORT).show();
-                            String url = "https://lamp.ms.wits.ac.za/home/s2555500/resetuser.php?username=" + username + "&&email=" + email + "&&password=" + Fpass;
+                            String url = "https://lamp.ms.wits.ac.za/home/scyber/resetuser.php?username=" + username + "&&email=" + email + "&&password=" + Fpass;
                             Reques(url, requestCallback);
                         } else if (radCounsellor.isChecked()) {
-                            String url = "https://lamp.ms.wits.ac.za/home/s2555500/resetcoun.php?username=" + username + "&&email=" + email + "&&password=" + Fpass;
+                            String url = "https://lamp.ms.wits.ac.za/home/scyber/resetcoun.php?username=" + username + "&&email=" + email + "&&password=" + Fpass;
                             Reques(url, requestCallback);
                             // openCounsellorPage(); // Replace with the correct PHP file for counsellors
                         } else {

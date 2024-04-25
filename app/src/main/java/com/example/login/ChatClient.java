@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class ChatClient {
 
-    private static final String BASE_URL = "https://lamp.ms.wits.ac.za/home/s2555500/get.php";
+    private static final String BASE_URL = "https://lamp.ms.wits.ac.za/home/scyber/get.php";
     // Replace with your PHP script URL
 
 

@@ -46,7 +46,7 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
-public class userSignUpActivity extends AppCompatActivity {
+public class  userSignUpActivity extends AppCompatActivity {
     private static final String TAG = "Login";
     private MainActivity.RequestCallback requestCallback;
     OkHttpClient client = new OkHttpClient();
@@ -106,7 +106,7 @@ public class userSignUpActivity extends AppCompatActivity {
                 int c=0;
                 int p =validateinput(c);
                 if(p==0) {
-                    String url = "https://lamp.ms.wits.ac.za/home/s2555500/assign1.php";
+                    String url = "https://lamp.ms.wits.ac.za/home/scyber/assign1.php";
                     Log.d(TAG, "URL: " + url); // Debug: Log the URL to verify it's correct
 
                     // Create the request body with the form parameters
